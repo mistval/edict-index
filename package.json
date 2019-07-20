@@ -1,0 +1,40 @@
+{
+  "name": "edict-index",
+  "version": "0.0.0",
+  "description": "Build and search an index from EDICT or other EDICT format databases.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "./node_modules/.bin/eslint .",
+    "lintfix": "./node_modules/.bin/eslint . --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mistval/edict-index.git"
+  },
+  "keywords": [
+    "edict",
+    "japanese",
+    "dictionary",
+    "search",
+    "index",
+    "edict2"
+  ],
+  "author": "mistval",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mistval/edict-index/issues"
+  },
+  "homepage": "https://github.com/mistval/edict-index#readme",
+  "dependencies": {
+    "flexsearch": "^0.6.23"
+  },
+  "devDependencies": {
+    "adm-zip": "^0.4.13",
+    "axios": "^0.19.0",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.2",
+    "iconv": "^2.3.4"
+  }
+}
