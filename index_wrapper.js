@@ -1,8 +1,5 @@
 const wordFrequency = require('./frequency.json');
 
-function hasExactMatch(doc, searchTerm) {
-  return doc.kanji.some(k => k === searchTerm) || doc.readings.some(r => r === searchTerm);
-}
 
 function getFrequencyScore(doc) {
   const frequency = wordFrequency[doc.kanji[0]];
@@ -13,23 +10,33 @@ function getFrequencyScore(doc) {
   return frequency;
 }
 
+function calculateMatchQuality(doc, searchTerm) {
+  if (doc.kanji.some(k => k === searchTerm) || doc.readings.some(r => r === searchTerm)) {
+    return 10;
+  }
+
+  if (doc.kanji.some(k => k.indexOf(searchTerm) !== -1
+    || doc.readings.some(r => r.indexOf(searchTerm) !== -1))) {
+      return 5;
+  }
+
+  return 0;
+}
+
 class IndexWrapper {
   constructor(flexSearchIndex) {
     this.flexSearchIndex = flexSearchIndex;
   }
 
   search(searchTerm, limit) {
-    const results = this.flexSearchIndex.search(searchTerm, limit);
+    const results = this.flexSearchIndex.search(searchTerm, limit).map(result => ({
+      ...result,
+      matchQuality: calculateMatchQuality(result, searchTerm),
+    }));
+
     return results.sort((a, b) => {
-      const aHasExactMatch = hasExactMatch(a, searchTerm);
-      const bHasExactMatch = hasExactMatch(b, searchTerm);
-
-      if (aHasExactMatch && !bHasExactMatch) {
-        return -1;
-      }
-
-      if (bHasExactMatch && !aHasExactMatch) {
-        return 1;
+      if (a.matchQuality !== b.matchQuality) {
+        return b.matchQuality - a.matchQuality;
       }
 
       return getFrequencyScore(a) - getFrequencyScore(b);
