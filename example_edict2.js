@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const { Iconv } = require('iconv');
 const path = require('path');
 const zlib = require('zlib');
-const edictIndex = require('./index.js');
+const EdictIndex = require('./index.js');
 
 function decompress(gzippedBuffer) {
   return new Promise((fulfill, reject) => {
@@ -69,7 +69,7 @@ function printCarResults(index) {
 
 async function example() {
   const edict = await getEdictUtf8();
-  const index = edictIndex.buildIndex(edict);
+  const index = EdictIndex.buildIndex(edict);
 
   printCarResults(index);
 }

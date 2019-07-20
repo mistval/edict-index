@@ -34,7 +34,7 @@ class IndexWrapper {
 
       return getFrequencyScore(a) - getFrequencyScore(b);
     }).map(({
-      index, kanjiIndex, readingsIndex, ...other
+      definitionsIndex, index, kanjiIndex, readingsIndex, ...other
     }) => other);
   }
 }

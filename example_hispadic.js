@@ -4,7 +4,7 @@ const axios = require('axios');
 const fs = require('fs').promises;
 const path = require('path');
 const AdmZip = require('adm-zip');
-const edictIndex = require('./index.js');
+const EdictIndex = require('./index.js');
 
 function decompress(zipBuffer) {
   const zip = new AdmZip(zipBuffer);
@@ -58,7 +58,7 @@ function printCarResults(index) {
 
 async function example() {
   const hispadic = await getHispadicUtf8();
-  const index = edictIndex.buildIndex(hispadic);
+  const index = EdictIndex.buildIndex(hispadic);
 
   printCarResults(index);
 }
