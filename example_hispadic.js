@@ -1,3 +1,5 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+
 const axios = require('axios');
 const fs = require('fs').promises;
 const path = require('path');
@@ -11,23 +13,25 @@ function decompress(zipBuffer) {
   return hispadic;
 }
 
-async function getEdictUtf8() {
+async function getHispadicUtf8() {
   const cachedFilePath = path.join(__dirname, 'hispadict_utf8.txt');
 
   try {
     return await fs.readFile(cachedFilePath, 'utf8');
-  } catch {
+  } catch (err) {
     // Continue to download and convert the file.
   }
 
-  // Download EDICT as compressed EUC-JP file.
+  // Download Hispadic as compressed UTF8 file.
+  console.log('Downloading Hispadic from https://sites.google.com/site/hispadic/download/hispadic.zip');
   const response = await axios.get(
     'https://sites.google.com/site/hispadic/download/hispadic.zip',
     { responseType: 'arraybuffer' },
   );
-  
+
   // Decompress it
-  const zippedHispadicBuffer = new Buffer(response.data);
+  console.log('Decompressing Hispadic');
+  const zippedHispadicBuffer = Buffer.from(response.data);
   const hispadicBuffer = await decompress(zippedHispadicBuffer);
 
   // Write it to disk for next time.
@@ -53,10 +57,10 @@ function printCarResults(index) {
 }
 
 async function example() {
-  const edict = await getEdictUtf8();
-  const index = edictIndex.buildIndex(edict);
+  const hispadic = await getHispadicUtf8();
+  const index = edictIndex.buildIndex(hispadic);
 
   printCarResults(index);
 }
 
-example().catch((err) => console.warn(err));
+example().catch(err => console.warn(err));

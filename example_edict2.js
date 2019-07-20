@@ -1,6 +1,8 @@
+/* eslint import/no-extraneous-dependencies: 0 */
+
 const axios = require('axios');
 const fs = require('fs').promises;
-const Iconv = require('iconv').Iconv;
+const { Iconv } = require('iconv');
 const path = require('path');
 const zlib = require('zlib');
 const edictIndex = require('./index.js');
@@ -12,7 +14,7 @@ function decompress(gzippedBuffer) {
         return reject(err);
       }
 
-      fulfill(result);
+      return fulfill(result);
     });
   });
 }
@@ -22,21 +24,24 @@ async function getEdictUtf8() {
 
   try {
     return await fs.readFile(cachedFilePath, 'utf8');
-  } catch {
+  } catch (err) {
     // Continue to download and convert the file.
   }
 
   // Download EDICT as compressed EUC-JP file.
+  console.log('Downloading EDICT2 from http://ftp.monash.edu/pub/nihongo/edict2.gz');
   const response = await axios.get(
     'http://ftp.monash.edu/pub/nihongo/edict2.gz',
     { responseType: 'arraybuffer' },
   );
-  
+
   // Decompress it
-  const gzippedEdictEucJpBuffer = new Buffer(response.data);
+  console.log('Decompressing EDICT2');
+  const gzippedEdictEucJpBuffer = Buffer.from(response.data);
   const edictEucJpBuffer = await decompress(gzippedEdictEucJpBuffer);
 
   // Convert it to UTF-8
+  console.log('Converting EDICT 2 from EUC-JP to UTF-8');
   const converter = new Iconv('EUC-JP', 'UTF-8');
   const edictUtf8Buffer = converter.convert(edictEucJpBuffer);
 
@@ -69,4 +74,4 @@ async function example() {
   printCarResults(index);
 }
 
-example().catch((err) => console.warn(err));
+example().catch(err => console.warn(err));
