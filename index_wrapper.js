@@ -1,5 +1,16 @@
+const wordFrequency = require('./frequency.json');
+
 function hasExactMatch(doc, searchTerm) {
   return doc.kanji.some(k => k === searchTerm) || doc.readings.some(r => r === searchTerm);
+}
+
+function getFrequencyScore(doc) {
+  const frequency = wordFrequency[doc.kanji[0]];
+  if (frequency === undefined) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  return frequency;
 }
 
 class IndexWrapper {
@@ -7,8 +18,8 @@ class IndexWrapper {
     this.flexSearchIndex = flexSearchIndex;
   }
 
-  search(searchTerm) {
-    const results = this.flexSearchIndex.search(searchTerm);
+  search(searchTerm, limit) {
+    const results = this.flexSearchIndex.search(searchTerm, limit);
     return results.sort((a, b) => {
       const aHasExactMatch = hasExactMatch(a, searchTerm);
       const bHasExactMatch = hasExactMatch(b, searchTerm);
@@ -21,14 +32,10 @@ class IndexWrapper {
         return 1;
       }
 
-      return a.index - b.index;
+      return getFrequencyScore(a) - getFrequencyScore(b);
     }).map(({
       index, kanjiIndex, readingsIndex, ...other
     }) => other);
-  }
-
-  serialize() {
-    return this.flexSearchIndex.export();
   }
 }
 

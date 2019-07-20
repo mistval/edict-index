@@ -87,10 +87,15 @@ function createDocumentForEdictLine(line, index) {
     index,
     kanjiIndex: kanji.join(','),
     readingsIndex: readings.join(','),
+    definitionsIndex: glosses.map(gloss => gloss.definition).join(', '),
     kanji,
     readings,
     glosses,
   };
+}
+
+function tokenizeJapanese(str) {
+  return str.replace(/[\x32-\x7F]/g, '').split('');
 }
 
 /**
@@ -102,15 +107,17 @@ function buildIndex(edictUtf8String) {
 
   const flexSearchIndex = new FlexSearch({
     encode: false,
-    tokenize(str) {
-      return str.replace(/[\x32-\x7F]/g, '').split('');
-    },
     doc: {
       id: 'index',
-      field: [
-        'kanjiIndex',
-        'readingsIndex',
-      ],
+      field: {
+        kanjiIndex: {
+          tokenize: tokenizeJapanese,
+        },
+        readingsIndex: {
+          tokenize: tokenizeJapanese,
+        },
+        definitionsIndex: {},
+      },
     },
   });
 
