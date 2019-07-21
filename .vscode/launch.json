@@ -7,6 +7,12 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Launch French example",
+      "program": "${workspaceFolder}\\example_french.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Launch Hispadic example",
       "program": "${workspaceFolder}\\example_hispadic.js"
     },
