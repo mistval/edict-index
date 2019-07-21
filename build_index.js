@@ -65,6 +65,10 @@ function splitGlossPart(glossPart) {
     }
   }
 
+  if (currentGloss.length > 0) {
+    glosses.push(currentGloss.join('').trim());
+  }
+
   return glosses;
 }
 

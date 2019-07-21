@@ -46,7 +46,7 @@ function calculateMatchType(doc, searchTerm) {
   }
 
   if (kanjiOrKanaContains(doc, searchTerm)) {
-      return MatchType.KANJI_OR_KANA_SUBSTRING;
+    return MatchType.KANJI_OR_KANA_SUBSTRING;
   }
 
   if (definitionExact(doc, searchTerm)) {
@@ -66,7 +66,7 @@ class IndexWrapper {
   }
 
   search(searchTerm, limit) {
-    const results = this.flexSearchIndex.search(searchTerm, limit).map(result => ({
+    const results = this.flexSearchIndex.search(searchTerm).map(result => ({
       ...result,
       matchType: calculateMatchType(result, searchTerm),
       frequencyRank: calculateFrequencyRank(result),
@@ -80,7 +80,7 @@ class IndexWrapper {
       return a.frequencyRank - b.frequencyRank;
     }).map(({
       definitionsIndex, index, kanjiIndex, readingsIndex, ...other
-    }) => other);
+    }) => other).slice(0, limit);
   }
 }
 
