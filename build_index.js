@@ -85,7 +85,10 @@ function createDocumentForEdictLine(line, index) {
 
   const kanji = kanjiPart.split(';');
   const readings = readingsPart.split(';').filter(x => x);
-  const glosses = splitGlossPart(glossPart).map(parseGloss).filter(x => x);
+  const glosses = splitGlossPart(glossPart)
+    .filter(x => x)
+    .map(parseGloss)
+    .filter(x => x);
 
   return {
     index,

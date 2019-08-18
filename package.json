@@ -1,6 +1,6 @@
 {
   "name": "edict-index",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Build and search an index from EDICT or other EDICT format databases.",
   "main": "index.js",
   "scripts": {
